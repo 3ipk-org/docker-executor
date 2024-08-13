@@ -1,42 +1,100 @@
-
 # DevOps Toolchain Docker Image
 
 This repository contains a Dockerfile that builds a comprehensive DevOps toolchain image based on Debian. The image includes various tools commonly used in DevOps and cloud infrastructure management workflows.
 
-## Purpose
-
-The purpose of this Docker image is to provide a consistent environment with pre-installed DevOps tools, making it easier to run infrastructure management, Kubernetes operations, and cloud-related tasks across different environments.
-
 ## Installed Tools
 
-The following tools are installed in this Docker image:
+The image includes the following tools:
 
-1. Terraform - Infrastructure as Code tool
+1. Terraform
 2. HCP (HashiCorp Cloud Platform) CLI
-3. kubectl - Kubernetes command-line tool
-4. Skaffold - Command line tool that facilitates continuous development for Kubernetes applications
-5. Helm - Kubernetes package manager
-6. AWS CLI - Command line interface for Amazon Web Services
-7. Git - Version control system
-8. jq - Lightweight command-line JSON processor
-9. yq - YAML processor
-10. curl - Command line tool for transferring data using various protocols
-11. unzip - Extraction utility for ZIP archives
-12. OpenSSH server - For SSH access
+3. kubectl
+4. Skaffold
+5. Helm
+6. AWS CLI
+7. Git
+8. jq
+9. yq
+10. curl
+11. unzip
+12. OpenSSH server
 
-## Usage
+## Version History
 
-To use this image, you can pull it from your container registry or build it locally using the provided Dockerfile.
+| Version | Release Date | Changes |
+|---------|--------------|---------|
+| v1.0.0  | 13-Aug-2024  | Initial release |
+
+## Releasing a New Version
+
+To release a new version of the image:
+
+1. Update the Dockerfile or any other relevant files with your changes.
+2. Commit your changes and push to the main branch.
+3. Create a new tag following semantic versioning:
+   ```bash
+   git tag v1.2.3
+   git push origin v1.2.3
+   ```
+4. The GitHub Actions workflow will automatically build and push the new image to the GitHub Container Registry (ghcr.io) with the following tags:
+   - `v1.2.3` (full version)
+   - `v1.2` (major.minor version)
+   - `latest`
+
+## Using the Image
+
+For CI/CD pipelines, you can use the image as a base:
+```yaml
+image: ghcr.io/your-username/devops-toolchain:latest
+
+pipelines:
+  default:
+    - step:
+        name: Terraform Plan
+        script:
+          - cd terraform
+          - terraform init
+          - terraform plan -out=tfplan
+        artifacts:
+          - terraform/tfplan
+
+    - step:
+        name: Terraform Apply
+        trigger: manual
+        script:
+          - cd terraform
+          - terraform apply -auto-approve tfplan
+
+  branches:
+    main:
+      - step:
+          name: Deploy to Kubernetes
+          script:
+            - kubectl config use-context my-cluster
+            - helm upgrade --install my-app ./helm-charts/my-app --namespace production
+
+```
+
+## Version Information
+
+To check the versions of installed tools:
 
 ```bash
-# edit / check tools versions in ./build.sh
-# run the build
-./build.sh
+docker run --rm ghcr.io/3ipk-org/docker-executor:latest aws --version
+docker run --rm ghcr.io/3ipk-org/docker-executor:latest helm version
+docker run --rm ghcr.io/3ipk-org/docker-executor:latest skaffold version
+docker run --rm ghcr.io/3ipk-org/docker-executor:latest kubectl version
+docker run --rm ghcr.io/3ipk-org/docker-executor:latest terraform version
+docker run --rm ghcr.io/3ipk-org/docker-executor:latest hcp version
 ```
 
 ## Notes
 
 - The image is based on Debian (slim version).
 - A non-root user 'nonroot' is created for running the container.
-- The working directory is set to /workspace.
-- Custom versions of tools can be specified using build arguments.
+- The working directory is set to `/workspace`.
+
+For more detailed information about the image and its contents, please refer to the Dockerfile in this repository.
+
+
+
