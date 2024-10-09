@@ -7,10 +7,14 @@ docker buildx build \
   --progress plain \
   --tag ${IMAGE_NAME}:${IMAGE_TAG} .
 
-# verify 
+# verify
 docker run --rm 3ipk-executor:latest aws --version
 docker run --rm 3ipk-executor:latest helm version
 docker run --rm 3ipk-executor:latest skaffold version
 docker run --rm 3ipk-executor:latest kubectl version
 docker run --rm 3ipk-executor:latest terraform version
+docker run --rm 3ipk-executor:latest vault version
 docker run --rm 3ipk-executor:latest hcp version
+docker run --rm 3ipk-executor:latest nvm -v
+docker run --rm 3ipk-executor:latest npm -v
+docker run --rm 3ipk-executor:latest node -v
