@@ -7,23 +7,26 @@ This repository contains a Dockerfile that builds a comprehensive DevOps toolcha
 The image includes the following tools:
 
 1. Terraform
-2. HCP (HashiCorp Cloud Platform) CLI
-3. kubectl
-4. Skaffold
-5. Helm
-6. AWS CLI
-7. Git
-8. jq
-9. yq
-10. curl
-11. unzip
-12. OpenSSH server
+1. HCP (HashiCorp Cloud Platform) CLI
+1. Vault
+1. kubectl
+1. Skaffold
+1. Helm
+1. AWS CLI
+1. Node / npm / nvm
+1. Git
+1. jq
+1. yq
+1. curl
+1. unzip
+1. OpenSSH server
 
 ## Version History
 
 | Version | Release Date | Changes |
 |---------|--------------|---------|
 | v1.0.0  | 13-Aug-2024  | Initial release |
+| v1.1.0  | 09-Oct-2024  | Add vault, node |
 
 ## Releasing a New Version
 
